@@ -1,7 +1,6 @@
-"use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _mongodb = require('mongodb');
-var _bcryptjs = require('bcryptjs'); var _bcryptjs2 = _interopRequireDefault(_bcryptjs);
+"use strict";Object.defineProperty(exports, "__esModule", {value: true});var _mongodb = require('mongodb');
 
-class UserModel {
+class MedicineModel {
   constructor(name, email) {
     this.init();
 
@@ -13,15 +12,15 @@ class UserModel {
     _mongodb.MongoClient.connect(process.env.MONGO_URL, function (err, db) {
       if (err) throw err;
       var dbo = db.db(process.env.DATABASE);
-      dbo.createCollection('users', function (err, res) {
+      dbo.createCollection('medicine', function (err, res) {
         if (err) throw err;
-        console.log('UserCollection created!');
+        console.log('MedicineCollection created!');
         db.close();
       });
     });
   }
 
-  static async create(user) {
+  static async create(medicine) {
     const client = await _mongodb.MongoClient.connect(process.env.MONGO_URL, {
       useNewUrlParser: true,
     }).catch((err) => {
@@ -32,16 +31,16 @@ class UserModel {
       return;
     }
 
-    user = await this.createPasswordHash(user);
-
     try {
       const dataBase = client.db(process.env.DATABASE);
 
       const myPromise = () => {
         return new Promise((resolve, reject) => {
-          dataBase.collection('users').insertOne(user, function (err, res) {
-            err ? reject(err) : resolve(res);
-          });
+          dataBase
+            .collection('medicine')
+            .insertOne(medicine, function (err, res) {
+              err ? reject(err) : resolve(res);
+            });
         });
       };
 
@@ -72,9 +71,9 @@ class UserModel {
       const myPromise = () => {
         return new Promise((resolve, reject) => {
           dataBase
-            .collection('users')
+            .collection('medicine')
             .find(query, {
-              projection: { _id: 1, name: 1, email: 1, password_hash: 1 },
+              projection: { _id: 1, name: 1, dosage: 1 },
             })
             .toArray(function (err, res) {
               err ? reject(err) : resolve(res);
@@ -91,22 +90,6 @@ class UserModel {
       return err;
     }
   }
-
-  static async createPasswordHash(user) {
-    const { name, email, password } = user;
-
-    if (password) {
-      const password_hash = await _bcryptjs2.default.hash(user.password, 8); //retornar uma senha criptografada a partir do user.password com uma força de 8
-      return { name, email, password_hash };
-    }
-
-    return user;
-  }
-
-  //Verifica se a senha passada sem criptografia é a mesma que foi criptografada no banco
-  static async checkPassword(password, password_hash) {
-    return await _bcryptjs2.default.compare(password, password_hash);
-  }
 }
 
-exports. default = UserModel;
+exports. default = MedicineModel;

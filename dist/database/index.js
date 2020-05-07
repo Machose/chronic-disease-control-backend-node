@@ -2,8 +2,9 @@
 var _mongodb = require('mongodb');
 
 var _User = require('../app/models/User'); var _User2 = _interopRequireDefault(_User);
+var _Medicine = require('../app/models/Medicine'); var _Medicine2 = _interopRequireDefault(_Medicine);
 
-const models = [_User2.default];
+const models = [_User2.default, _Medicine2.default];
 
 class Database {
   constructor() {
