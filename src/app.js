@@ -1,6 +1,7 @@
 import 'dotenv/config'; //carrega todas as variaveis criadas no arquivo .env e adicona elas em uma variavel global do node: process.env = DB_HOST
 
 import express from 'express';
+import cors from 'cors';
 
 import routes from './routes';
 
@@ -19,6 +20,7 @@ class App {
   }
 
   routes() {
+    this.server.use(cors());
     this.server.use(routes);
   }
 }

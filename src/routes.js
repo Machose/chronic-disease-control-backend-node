@@ -2,6 +2,7 @@ import { Router } from 'express';
 
 import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
+import MedicineController from './app/controllers/MedicineController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -18,5 +19,10 @@ routes.use(authMiddleware); //Middleware que impede a utilização do app sem a 
 routes.get('/users', UserController.index);
 routes.get('/users/:id', UserController.show);
 routes.put('/users/:id', UserController.update);
+
+/** Medicine */
+routes.post('/medicines', MedicineController.store);
+routes.get('/medicines', MedicineController.index);
+routes.put('/medicines/:id', MedicineController.update);
 
 export default routes;

@@ -32,7 +32,7 @@ class SessionController {
       return res.status(401).json({ error: 'Password does not match' });
     }
 
-    const { id, name } = user;
+    const { _id: id, name } = user[0];
 
     return res.json({
       user: {
