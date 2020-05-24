@@ -22,7 +22,7 @@ class MedicineModel {
 
   static async create(medicine) {
     const client = await _mongodb.MongoClient.connect(process.env.MONGO_URL, {
-      useNewUrlParser: true,
+      useNewUrlParser: true
     }).catch((err) => {
       console.log(err);
     });
@@ -56,7 +56,7 @@ class MedicineModel {
 
   static async find(query = {}) {
     const client = await _mongodb.MongoClient.connect(process.env.MONGO_URL, {
-      useNewUrlParser: true,
+      useNewUrlParser: true
     }).catch((err) => {
       console.log(err);
     });
@@ -73,9 +73,115 @@ class MedicineModel {
           dataBase
             .collection('medicine')
             .find(query, {
-              projection: { _id: 1, name: 1, dosage: 1 },
+              projection: { _id: 1, name: 1, dosage: 1, observation: 1 }
             })
             .toArray(function (err, res) {
+              err ? reject(err) : resolve(res);
+            });
+        });
+      };
+
+      const result = await myPromise();
+
+      client.close();
+
+      return result;
+    } catch (err) {
+      return err;
+    }
+  }
+
+  static async findById(id) {
+    const client = await _mongodb.MongoClient.connect(process.env.MONGO_URL, {
+      useNewUrlParser: true
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    if (!client) {
+      return;
+    }
+
+    try {
+      const dataBase = client.db(process.env.DATABASE);
+
+      const myPromise = () => {
+        return new Promise((resolve, reject) => {
+          dataBase
+            .collection('medicine')
+            .findOne({ _id: new (0, _mongodb.ObjectID)(id) }, function (err, res) {
+              err ? reject(err) : resolve(res);
+            });
+        });
+      };
+
+      const result = await myPromise();
+
+      client.close();
+
+      return result;
+    } catch (err) {
+      return err;
+    }
+  }
+
+  static async updateById(id, newValues = {}) {
+    const client = await _mongodb.MongoClient.connect(process.env.MONGO_URL, {
+      useNewUrlParser: true
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    if (!client) {
+      return;
+    }
+
+    try {
+      const dataBase = client.db(process.env.DATABASE);
+
+      const myPromise = () => {
+        return new Promise((resolve, reject) => {
+          dataBase
+            .collection('medicine')
+            .updateOne(
+              { _id: new (0, _mongodb.ObjectID)(id) },
+              { $set: newValues },
+              function (err, res) {
+                err ? reject(err) : resolve(res);
+              }
+            );
+        });
+      };
+
+      const result = await myPromise();
+
+      client.close();
+
+      return result;
+    } catch (err) {
+      return err;
+    }
+  }
+
+  static async deleteById(id) {
+    const client = await _mongodb.MongoClient.connect(process.env.MONGO_URL, {
+      useNewUrlParser: true
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    if (!client) {
+      return;
+    }
+
+    try {
+      const dataBase = client.db(process.env.DATABASE);
+
+      const myPromise = () => {
+        return new Promise((resolve, reject) => {
+          dataBase
+            .collection('medicine')
+            .deleteOne({ _id: new (0, _mongodb.ObjectID)(id) }, function (err, res) {
               err ? reject(err) : resolve(res);
             });
         });

@@ -23,6 +23,8 @@ routes.put('/users/:id', UserController.update);
 /** Medicine */
 routes.post('/medicines', MedicineController.store);
 routes.get('/medicines', MedicineController.index);
+routes.get('/medicines/:id', MedicineController.show);
 routes.put('/medicines/:id', MedicineController.update);
+routes.delete('/medicines/:id', MedicineController.delete);
 
 export default routes;
