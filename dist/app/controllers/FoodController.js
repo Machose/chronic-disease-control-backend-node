@@ -1,14 +1,14 @@
 "use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { newObj[key] = obj[key]; } } } newObj.default = obj; return newObj; } } function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _yup = require('yup'); var Yup = _interopRequireWildcard(_yup); //como o yup n possui um export defaut em nenhum lugar, a sintax import * as Yup possibilita que o app armazena tudo que esta dentro do arquivo yup dentro da variavel Yup
 
-var _Medicine = require('../models/Medicine'); var _Medicine2 = _interopRequireDefault(_Medicine);
+var _Food = require('../models/Food'); var _Food2 = _interopRequireDefault(_Food);
 
-class MedicineController {
+class FoodController {
   //Create user
   async store(req, res) {
     //lidando um objeto, que tenha formato ...
     const schema = Yup.object().shape({
       name: Yup.string().required(),
-      dosage: Yup.string().required(),
+      grams: Yup.string().required(),
       observation: Yup.string()
     });
 
@@ -17,23 +17,23 @@ class MedicineController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { name, dosage, observation } = req.body;
+    const { name, grams, observation } = req.body;
 
-    const medicine = await _Medicine2.default.create({
+    const food = await _Food2.default.create({
       name,
-      dosage,
+      grams,
       observation,
       user_id: req.userId
     });
 
-    return res.status(201).json(medicine);
+    return res.status(201).json(food);
   }
 
   async update(req, res) {
     //lidando um objeto, que tenha formato ...
     const schema = Yup.object().shape({
       name: Yup.string().required(),
-      dosage: Yup.string().required(),
+      grams: Yup.string().required(),
       observation: Yup.string()
     });
 
@@ -44,38 +44,38 @@ class MedicineController {
 
     const { id } = req.params;
 
-    const { name, dosage, observation } = req.body;
+    const { name, grams, observation } = req.body;
 
-    const medicine = await _Medicine2.default.updateById(id, {
+    const food = await _Food2.default.updateById(id, {
       name,
-      dosage,
+      grams,
       observation
     });
 
-    return res.status(200).json(medicine);
+    return res.status(200).json(food);
   }
 
   async index(req, res) {
-    const medicines = await _Medicine2.default.find({ user_id: req.userId });
+    const foods = await _Food2.default.find({ user_id: req.userId });
 
-    return res.status(200).json(medicines);
+    return res.status(200).json(foods);
   }
 
   async show(req, res) {
     const { id } = req.params;
 
-    const medicine = await _Medicine2.default.findById(id);
+    const food = await _Food2.default.findById(id);
 
-    return res.status(200).json(medicine);
+    return res.status(200).json(food);
   }
 
   async delete(req, res) {
     const { id } = req.params;
 
-    await _Medicine2.default.deleteById(id);
+    await _Food2.default.deleteById(id);
 
     return res.status(200).json({ deleted: true });
   }
 }
 
-exports. default = new MedicineController();
+exports. default = new FoodController();

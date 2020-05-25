@@ -1,14 +1,14 @@
 import * as Yup from 'yup'; //como o yup n possui um export defaut em nenhum lugar, a sintax import * as Yup possibilita que o app armazena tudo que esta dentro do arquivo yup dentro da variavel Yup
 
-import MedicineModel from '../models/Medicine';
+import FoodModel from '../models/Food';
 
-class MedicineController {
+class FoodController {
   //Create user
   async store(req, res) {
     //lidando um objeto, que tenha formato ...
     const schema = Yup.object().shape({
       name: Yup.string().required(),
-      dosage: Yup.string().required(),
+      grams: Yup.string().required(),
       observation: Yup.string()
     });
 
@@ -17,23 +17,23 @@ class MedicineController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { name, dosage, observation } = req.body;
+    const { name, grams, observation } = req.body;
 
-    const medicine = await MedicineModel.create({
+    const food = await FoodModel.create({
       name,
-      dosage,
+      grams,
       observation,
       user_id: req.userId
     });
 
-    return res.status(201).json(medicine);
+    return res.status(201).json(food);
   }
 
   async update(req, res) {
     //lidando um objeto, que tenha formato ...
     const schema = Yup.object().shape({
       name: Yup.string().required(),
-      dosage: Yup.string().required(),
+      grams: Yup.string().required(),
       observation: Yup.string()
     });
 
@@ -44,38 +44,38 @@ class MedicineController {
 
     const { id } = req.params;
 
-    const { name, dosage, observation } = req.body;
+    const { name, grams, observation } = req.body;
 
-    const medicine = await MedicineModel.updateById(id, {
+    const food = await FoodModel.updateById(id, {
       name,
-      dosage,
+      grams,
       observation
     });
 
-    return res.status(200).json(medicine);
+    return res.status(200).json(food);
   }
 
   async index(req, res) {
-    const medicines = await MedicineModel.find({ user_id: req.userId });
+    const foods = await FoodModel.find({ user_id: req.userId });
 
-    return res.status(200).json(medicines);
+    return res.status(200).json(foods);
   }
 
   async show(req, res) {
     const { id } = req.params;
 
-    const medicine = await MedicineModel.findById(id);
+    const food = await FoodModel.findById(id);
 
-    return res.status(200).json(medicine);
+    return res.status(200).json(food);
   }
 
   async delete(req, res) {
     const { id } = req.params;
 
-    await MedicineModel.deleteById(id);
+    await FoodModel.deleteById(id);
 
     return res.status(200).json({ deleted: true });
   }
 }
 
-export default new MedicineController();
+export default new FoodController();

@@ -3,6 +3,7 @@ import { Router } from 'express';
 import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import MedicineController from './app/controllers/MedicineController';
+import FoodController from './app/controllers/FoodController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -26,5 +27,12 @@ routes.get('/medicines', MedicineController.index);
 routes.get('/medicines/:id', MedicineController.show);
 routes.put('/medicines/:id', MedicineController.update);
 routes.delete('/medicines/:id', MedicineController.delete);
+
+/** Food */
+routes.post('/foods', FoodController.store);
+routes.get('/foods', FoodController.index);
+routes.get('/foods/:id', FoodController.show);
+routes.put('/foods/:id', FoodController.update);
+routes.delete('/foods/:id', FoodController.delete);
 
 export default routes;
