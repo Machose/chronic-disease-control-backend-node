@@ -23,7 +23,7 @@ class UserModel {
 
   static async create(user) {
     const client = await _mongodb.MongoClient.connect(process.env.MONGO_URL, {
-      useNewUrlParser: true,
+      useNewUrlParser: true
     }).catch((err) => {
       console.log(err);
     });
@@ -57,7 +57,7 @@ class UserModel {
 
   static async find(query = {}) {
     const client = await _mongodb.MongoClient.connect(process.env.MONGO_URL, {
-      useNewUrlParser: true,
+      useNewUrlParser: true
     }).catch((err) => {
       console.log(err);
     });
@@ -74,9 +74,82 @@ class UserModel {
           dataBase
             .collection('users')
             .find(query, {
-              projection: { _id: 1, name: 1, email: 1, password_hash: 1 },
+              projection: { _id: 1, name: 1, email: 1, password_hash: 1 }
             })
             .toArray(function (err, res) {
+              err ? reject(err) : resolve(res);
+            });
+        });
+      };
+
+      const result = await myPromise();
+
+      client.close();
+
+      return result;
+    } catch (err) {
+      return err;
+    }
+  }
+
+  static async findById(id) {
+    const client = await _mongodb.MongoClient.connect(process.env.MONGO_URL, {
+      useNewUrlParser: true
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    if (!client) {
+      return;
+    }
+
+    try {
+      const dataBase = client.db(process.env.DATABASE);
+
+      const myPromise = () => {
+        return new Promise((resolve, reject) => {
+          dataBase
+            .collection('users')
+            .findOne({ _id: new (0, _mongodb.ObjectID)(id) }, function (err, res) {
+              err ? reject(err) : resolve(res);
+            });
+        });
+      };
+
+      const result = await myPromise();
+
+      client.close();
+
+      return result;
+    } catch (err) {
+      return err;
+    }
+  }
+
+  static async updateById(id, user) {
+    const client = await _mongodb.MongoClient.connect(process.env.MONGO_URL, {
+      useNewUrlParser: true
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    if (!client) {
+      return;
+    }
+
+    user = await this.createPasswordHash(user);
+
+    try {
+      const dataBase = client.db(process.env.DATABASE);
+
+      const myPromise = () => {
+        return new Promise((resolve, reject) => {
+          dataBase
+            .collection('users')
+            .updateOne({ _id: new (0, _mongodb.ObjectID)(id) }, { $set: user }, function (
+              err,
+              res
+            ) {
               err ? reject(err) : resolve(res);
             });
         });
@@ -100,7 +173,7 @@ class UserModel {
       return { name, email, password_hash };
     }
 
-    return user;
+    return { name, email };
   }
 
   //Verifica se a senha passada sem criptografia é a mesma que foi criptografada no banco

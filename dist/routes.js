@@ -19,7 +19,7 @@ routes.use(_auth2.default); //Middleware que impede a utilização do app sem a 
 /** User */
 routes.get('/users', _UserController2.default.index);
 routes.get('/users/:id', _UserController2.default.show);
-routes.put('/users/:id', _UserController2.default.update);
+routes.put('/users', _UserController2.default.update);
 
 /** Medicine */
 routes.post('/medicines', _MedicineController2.default.store);
