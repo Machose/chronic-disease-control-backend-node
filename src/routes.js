@@ -4,6 +4,7 @@ import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import MedicineController from './app/controllers/MedicineController';
 import FoodController from './app/controllers/FoodController';
+import PhysicalActivityController from './app/controllers/PhysicalActivityController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -34,5 +35,12 @@ routes.get('/foods', FoodController.index);
 routes.get('/foods/:id', FoodController.show);
 routes.put('/foods/:id', FoodController.update);
 routes.delete('/foods/:id', FoodController.delete);
+
+/** physicalActivity */
+routes.post('/physicalActivities', PhysicalActivityController.store);
+routes.get('/physicalActivities', PhysicalActivityController.index);
+routes.get('/physicalActivities/:id', PhysicalActivityController.show);
+routes.put('/physicalActivities/:id', PhysicalActivityController.update);
+routes.delete('/physicalActivities/:id', PhysicalActivityController.delete);
 
 export default routes;

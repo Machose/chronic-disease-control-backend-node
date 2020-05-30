@@ -4,6 +4,7 @@ var _UserController = require('./app/controllers/UserController'); var _UserCont
 var _SessionController = require('./app/controllers/SessionController'); var _SessionController2 = _interopRequireDefault(_SessionController);
 var _MedicineController = require('./app/controllers/MedicineController'); var _MedicineController2 = _interopRequireDefault(_MedicineController);
 var _FoodController = require('./app/controllers/FoodController'); var _FoodController2 = _interopRequireDefault(_FoodController);
+var _PhysicalActivityController = require('./app/controllers/PhysicalActivityController'); var _PhysicalActivityController2 = _interopRequireDefault(_PhysicalActivityController);
 
 var _auth = require('./app/middlewares/auth'); var _auth2 = _interopRequireDefault(_auth);
 
@@ -34,5 +35,12 @@ routes.get('/foods', _FoodController2.default.index);
 routes.get('/foods/:id', _FoodController2.default.show);
 routes.put('/foods/:id', _FoodController2.default.update);
 routes.delete('/foods/:id', _FoodController2.default.delete);
+
+/** physicalActivity */
+routes.post('/physicalActivities', _PhysicalActivityController2.default.store);
+routes.get('/physicalActivities', _PhysicalActivityController2.default.index);
+routes.get('/physicalActivities/:id', _PhysicalActivityController2.default.show);
+routes.put('/physicalActivities/:id', _PhysicalActivityController2.default.update);
+routes.delete('/physicalActivities/:id', _PhysicalActivityController2.default.delete);
 
 exports. default = routes;

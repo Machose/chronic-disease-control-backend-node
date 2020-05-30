@@ -4,8 +4,9 @@ import { MongoClient } from 'mongodb';
 import UserModel from '../app/models/User';
 import MedicineModel from '../app/models/Medicine';
 import FoodModel from '../app/models/Food';
+import PhysicalActivityModel from '../app/models/Food';
 
-const models = [UserModel, MedicineModel, FoodModel];
+const models = [UserModel, MedicineModel, FoodModel, PhysicalActivityModel];
 
 class Database {
   constructor() {
