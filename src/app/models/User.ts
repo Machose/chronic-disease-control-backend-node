@@ -7,7 +7,7 @@ interface Result {
 }
 
 class UserModel extends AbstractModel {
-  protected static collectionName: string = 'user';
+  protected static collectionName: string = 'users';
 
   static async create(user) {
     const client = await MongoClient.connect(process.env.MONGO_URL, {
@@ -27,7 +27,7 @@ class UserModel extends AbstractModel {
 
       const myPromise = () => {
         return new Promise((resolve, reject) => {
-          dataBase.collection('user').insertOne(user, function (err, res) {
+          dataBase.collection('users').insertOne(user, function (err, res) {
             err ? reject(err) : resolve(res);
           });
         });
@@ -62,7 +62,7 @@ class UserModel extends AbstractModel {
       const myPromise = () => {
         return new Promise((resolve, reject) => {
           dataBase
-            .collection('user')
+            .collection('users')
             .updateOne({ _id: new ObjectID(id) }, { $set: user }, function (
               err,
               res
