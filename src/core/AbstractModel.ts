@@ -1,61 +1,29 @@
 import { MongoClient, ObjectID } from 'mongodb';
-import bcrypt from 'bcryptjs';
 
-class UserModel {
-  constructor(name, email) {
-    this.init();
+interface Result {
+  ops?: any[];
+}
 
-    this.name = name;
-    this.email = email;
-  }
+abstract class AbstractModel {
+  protected static collectionName: string;
 
-  static init() {
+  public static init() {
+    const collectionName = this.collectionName;
+
     MongoClient.connect(process.env.MONGO_URL, function (err, db) {
       if (err) throw err;
       var dbo = db.db(process.env.DATABASE);
-      dbo.createCollection('users', function (err, res) {
+      dbo.createCollection(collectionName, function (err, res) {
         if (err) throw err;
-        console.log('UserCollection created!');
+        console.log(`${collectionName}Collection created!`);
         db.close();
       });
     });
   }
 
-  static async create(user) {
-    const client = await MongoClient.connect(process.env.MONGO_URL, {
-      useNewUrlParser: true
-    }).catch((err) => {
-      console.log(err);
-    });
+  public static async create(object) {
+    const collectionName = this.collectionName;
 
-    if (!client) {
-      return;
-    }
-
-    user = await this.createPasswordHash(user);
-
-    try {
-      const dataBase = client.db(process.env.DATABASE);
-
-      const myPromise = () => {
-        return new Promise((resolve, reject) => {
-          dataBase.collection('users').insertOne(user, function (err, res) {
-            err ? reject(err) : resolve(res);
-          });
-        });
-      };
-
-      const result = await myPromise();
-
-      client.close();
-
-      return result.ops[0];
-    } catch (err) {
-      return err;
-    }
-  }
-
-  static async find(query = {}) {
     const client = await MongoClient.connect(process.env.MONGO_URL, {
       useNewUrlParser: true
     }).catch((err) => {
@@ -72,10 +40,44 @@ class UserModel {
       const myPromise = () => {
         return new Promise((resolve, reject) => {
           dataBase
-            .collection('users')
-            .find(query, {
-              projection: { _id: 1, name: 1, email: 1, password_hash: 1 }
-            })
+            .collection(collectionName)
+            .insertOne(object, function (err, res) {
+              err ? reject(err) : resolve(res);
+            });
+        });
+      };
+
+      const result: Result = await myPromise();
+
+      client.close();
+
+      return result.ops[0];
+    } catch (err) {
+      return err;
+    }
+  }
+
+  public static async find(query = {}) {
+    const collectionName = this.collectionName;
+
+    const client = await MongoClient.connect(process.env.MONGO_URL, {
+      useNewUrlParser: true
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    if (!client) {
+      return;
+    }
+
+    try {
+      const dataBase = client.db(process.env.DATABASE);
+
+      const myPromise = () => {
+        return new Promise((resolve, reject) => {
+          dataBase
+            .collection(collectionName)
+            .find(query)
             .toArray(function (err, res) {
               err ? reject(err) : resolve(res);
             });
@@ -92,7 +94,9 @@ class UserModel {
     }
   }
 
-  static async findById(id) {
+  public static async findById(id) {
+    const collectionName = this.collectionName;
+
     const client = await MongoClient.connect(process.env.MONGO_URL, {
       useNewUrlParser: true
     }).catch((err) => {
@@ -109,7 +113,7 @@ class UserModel {
       const myPromise = () => {
         return new Promise((resolve, reject) => {
           dataBase
-            .collection('users')
+            .collection(collectionName)
             .findOne({ _id: new ObjectID(id) }, function (err, res) {
               err ? reject(err) : resolve(res);
             });
@@ -126,7 +130,9 @@ class UserModel {
     }
   }
 
-  static async updateById(id, user) {
+  public static async updateById(id, newValues = {}) {
+    const collectionName = this.collectionName;
+
     const client = await MongoClient.connect(process.env.MONGO_URL, {
       useNewUrlParser: true
     }).catch((err) => {
@@ -137,7 +143,45 @@ class UserModel {
       return;
     }
 
-    user = await this.createPasswordHash(user);
+    try {
+      const dataBase = client.db(process.env.DATABASE);
+
+      const myPromise = () => {
+        return new Promise((resolve, reject) => {
+          dataBase
+            .collection(collectionName)
+            .updateOne(
+              { _id: new ObjectID(id) },
+              { $set: newValues },
+              function (err, res) {
+                err ? reject(err) : resolve(res);
+              }
+            );
+        });
+      };
+
+      const result = await myPromise();
+
+      client.close();
+
+      return result;
+    } catch (err) {
+      return err;
+    }
+  }
+
+  public static async deleteById(id) {
+    const collectionName = this.collectionName;
+
+    const client = await MongoClient.connect(process.env.MONGO_URL, {
+      useNewUrlParser: true
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    if (!client) {
+      return;
+    }
 
     try {
       const dataBase = client.db(process.env.DATABASE);
@@ -145,11 +189,8 @@ class UserModel {
       const myPromise = () => {
         return new Promise((resolve, reject) => {
           dataBase
-            .collection('users')
-            .updateOne({ _id: new ObjectID(id) }, { $set: user }, function (
-              err,
-              res
-            ) {
+            .collection(collectionName)
+            .deleteOne({ _id: new ObjectID(id) }, function (err, res) {
               err ? reject(err) : resolve(res);
             });
         });
@@ -164,22 +205,6 @@ class UserModel {
       return err;
     }
   }
-
-  static async createPasswordHash(user) {
-    const { name, email, password } = user;
-
-    if (password) {
-      const password_hash = await bcrypt.hash(user.password, 8); //retornar uma senha criptografada a partir do user.password com uma força de 8
-      return { name, email, password_hash };
-    }
-
-    return { name, email };
-  }
-
-  //Verifica se a senha passada sem criptografia é a mesma que foi criptografada no banco
-  static async checkPassword(password, password_hash) {
-    return await bcrypt.compare(password, password_hash);
-  }
 }
 
-export default UserModel;
+export default AbstractModel;

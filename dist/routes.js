@@ -8,7 +8,7 @@ var _PhysicalActivityController = require('./app/controllers/PhysicalActivityCon
 
 var _auth = require('./app/middlewares/auth'); var _auth2 = _interopRequireDefault(_auth);
 
-const routes = new (0, _express.Router)();
+const routes = _express.Router.call(void 0, );
 
 /** Controle de login - Acesso e cadastro */
 routes.post('/sessions', _SessionController2.default.store);

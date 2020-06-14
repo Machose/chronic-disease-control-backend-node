@@ -1,24 +1,29 @@
+import { Request, Response } from 'express';
 import * as Yup from 'yup'; //como o yup n possui um export defaut em nenhum lugar, a sintax import * as Yup possibilita que o app armazena tudo que esta dentro do arquivo yup dentro da variavel Yup
 
 import User from '../models/User';
 
+interface RequestPlus extends Request {
+  userId?: string;
+}
+
 class UserController {
   //Find a list user
-  async index(req, res) {
+  async index(req: RequestPlus, res: Response): Promise<Response> {
     const users = await User.find();
 
     return res.status(200).json(users);
   }
 
   //Find one user
-  async show(req, res) {
+  async show(req: RequestPlus, res: Response): Promise<Response> {
     const users = await User.find({ email: 'tes@email.com' });
 
     return res.status(200).json(users);
   }
 
   //Create user
-  async store(req, res) {
+  async store(req: RequestPlus, res: Response): Promise<Response> {
     //lidando um objeto, que tenha formato ...
     const schema = Yup.object().shape({
       name: Yup.string().required(),
@@ -44,7 +49,7 @@ class UserController {
     return res.status(201).json({ id, name, email });
   }
 
-  async update(req, res) {
+  async update(req: RequestPlus, res: Response): Promise<Response> {
     //lidando um objeto, que tenha formato ...
     const schema = Yup.object().shape({
       name: Yup.string().required(),

@@ -1,10 +1,15 @@
+import { Request, Response } from 'express';
 import * as Yup from 'yup'; //como o yup n possui um export defaut em nenhum lugar, a sintax import * as Yup possibilita que o app armazena tudo que esta dentro do arquivo yup dentro da variavel Yup
 
 import MedicineModel from '../models/Medicine';
 
+interface RequestPlus extends Request {
+  userId?: string;
+}
+
 class MedicineController {
   //Create user
-  async store(req, res) {
+  async store(req: RequestPlus, res: Response): Promise<Response> {
     //lidando um objeto, que tenha formato ...
     const schema = Yup.object().shape({
       name: Yup.string().required(),
@@ -29,7 +34,7 @@ class MedicineController {
     return res.status(201).json(medicine);
   }
 
-  async update(req, res) {
+  async update(req: Request, res: Response): Promise<Response> {
     //lidando um objeto, que tenha formato ...
     const schema = Yup.object().shape({
       name: Yup.string().required(),
@@ -55,13 +60,13 @@ class MedicineController {
     return res.status(200).json(medicine);
   }
 
-  async index(req, res) {
+  async index(req: RequestPlus, res: Response): Promise<Response> {
     const medicines = await MedicineModel.find({ user_id: req.userId });
 
     return res.status(200).json(medicines);
   }
 
-  async show(req, res) {
+  async show(req: RequestPlus, res: Response): Promise<Response> {
     const { id } = req.params;
 
     const medicine = await MedicineModel.findById(id);
@@ -69,7 +74,7 @@ class MedicineController {
     return res.status(200).json(medicine);
   }
 
-  async delete(req, res) {
+  async delete(req: RequestPlus, res: Response): Promise<Response> {
     const { id } = req.params;
 
     await MedicineModel.deleteById(id);

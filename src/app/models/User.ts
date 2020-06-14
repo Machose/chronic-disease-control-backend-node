@@ -1,16 +1,16 @@
-"use strict";Object.defineProperty(exports, "__esModule", {value: true}); function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }var _bcryptjs = require('bcryptjs'); var _bcryptjs2 = _interopRequireDefault(_bcryptjs);
-var _mongodb = require('mongodb');
-var _AbstractModel = require('../../core/AbstractModel'); var _AbstractModel2 = _interopRequireDefault(_AbstractModel);
+import bcrypt from 'bcryptjs';
+import { MongoClient, ObjectID } from 'mongodb';
+import AbstractModel from '../../core/AbstractModel';
 
+interface Result {
+  ops?: any[];
+}
 
-
-
-
-class UserModel extends _AbstractModel2.default {
-   static __initStatic() {this.collectionName = 'user'}
+class UserModel extends AbstractModel {
+  protected static collectionName: string = 'user';
 
   static async create(user) {
-    const client = await _mongodb.MongoClient.connect(process.env.MONGO_URL, {
+    const client = await MongoClient.connect(process.env.MONGO_URL, {
       useNewUrlParser: true
     }).catch((err) => {
       console.log(err);
@@ -33,7 +33,7 @@ class UserModel extends _AbstractModel2.default {
         });
       };
 
-      const result = await myPromise();
+      const result: Result = await myPromise();
 
       client.close();
 
@@ -44,7 +44,7 @@ class UserModel extends _AbstractModel2.default {
   }
 
   static async updateById(id, user) {
-    const client = await _mongodb.MongoClient.connect(process.env.MONGO_URL, {
+    const client = await MongoClient.connect(process.env.MONGO_URL, {
       useNewUrlParser: true
     }).catch((err) => {
       console.log(err);
@@ -63,7 +63,7 @@ class UserModel extends _AbstractModel2.default {
         return new Promise((resolve, reject) => {
           dataBase
             .collection('user')
-            .updateOne({ _id: new (0, _mongodb.ObjectID)(id) }, { $set: user }, function (
+            .updateOne({ _id: new ObjectID(id) }, { $set: user }, function (
               err,
               res
             ) {
@@ -86,7 +86,7 @@ class UserModel extends _AbstractModel2.default {
     const { name, email, password } = user;
 
     if (password) {
-      const password_hash = await _bcryptjs2.default.hash(user.password, 8); //retornar uma senha criptografada a partir do user.password com uma força de 8
+      const password_hash = await bcrypt.hash(user.password, 8); //retornar uma senha criptografada a partir do user.password com uma força de 8
       return { name, email, password_hash };
     }
 
@@ -95,8 +95,8 @@ class UserModel extends _AbstractModel2.default {
 
   //Verifica se a senha passada sem criptografia é a mesma que foi criptografada no banco
   static async checkPassword(password, password_hash) {
-    return await _bcryptjs2.default.compare(password, password_hash);
+    return await bcrypt.compare(password, password_hash);
   }
-} UserModel.__initStatic();
+}
 
-exports. default = UserModel;
+export default UserModel;

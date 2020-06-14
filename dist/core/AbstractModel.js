@@ -1,56 +1,30 @@
-import { MongoClient, ObjectID } from 'mongodb';
+"use strict";Object.defineProperty(exports, "__esModule", {value: true});var _mongodb = require('mongodb');
 
-class FoodModel {
-  constructor() {
-    this.init();
-  }
 
-  static init() {
-    MongoClient.connect(process.env.MONGO_URL, function (err, db) {
+
+
+
+ class AbstractModel {
+  
+
+   static init() {
+    const collectionName = this.collectionName;
+
+    _mongodb.MongoClient.connect(process.env.MONGO_URL, function (err, db) {
       if (err) throw err;
       var dbo = db.db(process.env.DATABASE);
-      dbo.createCollection('food', function (err, res) {
+      dbo.createCollection(collectionName, function (err, res) {
         if (err) throw err;
-        console.log('FoodCollection created!');
+        console.log(`${collectionName}Collection created!`);
         db.close();
       });
     });
   }
 
-  static async create(food) {
-    const client = await MongoClient.connect(process.env.MONGO_URL, {
-      useNewUrlParser: true
-    }).catch((err) => {
-      console.log(err);
-    });
+   static async create(object) {
+    const collectionName = this.collectionName;
 
-    if (!client) {
-      return;
-    }
-
-    try {
-      const dataBase = client.db(process.env.DATABASE);
-
-      const myPromise = () => {
-        return new Promise((resolve, reject) => {
-          dataBase.collection('food').insertOne(food, function (err, res) {
-            err ? reject(err) : resolve(res);
-          });
-        });
-      };
-
-      const result = await myPromise();
-
-      client.close();
-
-      return result.ops[0];
-    } catch (err) {
-      return err;
-    }
-  }
-
-  static async find(query = {}) {
-    const client = await MongoClient.connect(process.env.MONGO_URL, {
+    const client = await _mongodb.MongoClient.connect(process.env.MONGO_URL, {
       useNewUrlParser: true
     }).catch((err) => {
       console.log(err);
@@ -66,10 +40,44 @@ class FoodModel {
       const myPromise = () => {
         return new Promise((resolve, reject) => {
           dataBase
-            .collection('food')
-            .find(query, {
-              projection: { _id: 1, name: 1, grams: 1, observation: 1 }
-            })
+            .collection(collectionName)
+            .insertOne(object, function (err, res) {
+              err ? reject(err) : resolve(res);
+            });
+        });
+      };
+
+      const result = await myPromise();
+
+      client.close();
+
+      return result.ops[0];
+    } catch (err) {
+      return err;
+    }
+  }
+
+   static async find(query = {}) {
+    const collectionName = this.collectionName;
+
+    const client = await _mongodb.MongoClient.connect(process.env.MONGO_URL, {
+      useNewUrlParser: true
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    if (!client) {
+      return;
+    }
+
+    try {
+      const dataBase = client.db(process.env.DATABASE);
+
+      const myPromise = () => {
+        return new Promise((resolve, reject) => {
+          dataBase
+            .collection(collectionName)
+            .find(query)
             .toArray(function (err, res) {
               err ? reject(err) : resolve(res);
             });
@@ -86,8 +94,10 @@ class FoodModel {
     }
   }
 
-  static async findById(id) {
-    const client = await MongoClient.connect(process.env.MONGO_URL, {
+   static async findById(id) {
+    const collectionName = this.collectionName;
+
+    const client = await _mongodb.MongoClient.connect(process.env.MONGO_URL, {
       useNewUrlParser: true
     }).catch((err) => {
       console.log(err);
@@ -103,8 +113,8 @@ class FoodModel {
       const myPromise = () => {
         return new Promise((resolve, reject) => {
           dataBase
-            .collection('food')
-            .findOne({ _id: new ObjectID(id) }, function (err, res) {
+            .collection(collectionName)
+            .findOne({ _id: new (0, _mongodb.ObjectID)(id) }, function (err, res) {
               err ? reject(err) : resolve(res);
             });
         });
@@ -120,8 +130,10 @@ class FoodModel {
     }
   }
 
-  static async updateById(id, newValues = {}) {
-    const client = await MongoClient.connect(process.env.MONGO_URL, {
+   static async updateById(id, newValues = {}) {
+    const collectionName = this.collectionName;
+
+    const client = await _mongodb.MongoClient.connect(process.env.MONGO_URL, {
       useNewUrlParser: true
     }).catch((err) => {
       console.log(err);
@@ -137,9 +149,9 @@ class FoodModel {
       const myPromise = () => {
         return new Promise((resolve, reject) => {
           dataBase
-            .collection('food')
+            .collection(collectionName)
             .updateOne(
-              { _id: new ObjectID(id) },
+              { _id: new (0, _mongodb.ObjectID)(id) },
               { $set: newValues },
               function (err, res) {
                 err ? reject(err) : resolve(res);
@@ -158,8 +170,10 @@ class FoodModel {
     }
   }
 
-  static async deleteById(id) {
-    const client = await MongoClient.connect(process.env.MONGO_URL, {
+   static async deleteById(id) {
+    const collectionName = this.collectionName;
+
+    const client = await _mongodb.MongoClient.connect(process.env.MONGO_URL, {
       useNewUrlParser: true
     }).catch((err) => {
       console.log(err);
@@ -175,8 +189,8 @@ class FoodModel {
       const myPromise = () => {
         return new Promise((resolve, reject) => {
           dataBase
-            .collection('food')
-            .deleteOne({ _id: new ObjectID(id) }, function (err, res) {
+            .collection(collectionName)
+            .deleteOne({ _id: new (0, _mongodb.ObjectID)(id) }, function (err, res) {
               err ? reject(err) : resolve(res);
             });
         });
@@ -193,4 +207,4 @@ class FoodModel {
   }
 }
 
-export default FoodModel;
+exports. default = AbstractModel;

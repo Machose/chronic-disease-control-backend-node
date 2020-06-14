@@ -1,15 +1,20 @@
 //Esse arquivo servira para criar uma senssão de autenticação
 import jwt from 'jsonwebtoken';
+import { Request, Response } from 'express';
 import * as Yup from 'yup';
 import authConfig from '../../config/auth';
 
 import User from '../models/User';
 
+interface RequestPlus extends Request {
+  userId?: string;
+}
+
 class SessionController {
-  async store(req, res) {
+  async store(req: RequestPlus, res: Response): Promise<Response> {
     const schema = Yup.object().shape({
       email: Yup.string().email().required(),
-      password: Yup.string().required(),
+      password: Yup.string().required()
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -19,7 +24,7 @@ class SessionController {
     const { email, password } = req.body;
 
     const user = await User.find({
-      email,
+      email
     });
 
     //verifica se existe um usuário com esse email
@@ -38,12 +43,12 @@ class SessionController {
       user: {
         id,
         name,
-        email,
+        email
       },
 
       token: jwt.sign({ id }, authConfig.secret, {
-        expiresIn: authConfig.expiresIn,
-      }),
+        expiresIn: authConfig.expiresIn
+      })
     });
   }
 }

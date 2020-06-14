@@ -8,7 +8,7 @@ import PhysicalActivityController from './app/controllers/PhysicalActivityContro
 
 import authMiddleware from './app/middlewares/auth';
 
-const routes = new Router();
+const routes = Router();
 
 /** Controle de login - Acesso e cadastro */
 routes.post('/sessions', SessionController.store);

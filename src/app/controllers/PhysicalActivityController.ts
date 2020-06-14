@@ -1,14 +1,19 @@
+import { Request, Response } from 'express';
 import * as Yup from 'yup'; //como o yup n possui um export defaut em nenhum lugar, a sintax import * as Yup possibilita que o app armazena tudo que esta dentro do arquivo yup dentro da variavel Yup
 
-import FoodModel from '../models/Food';
+import PhysicalActivityModel from '../models/PhysicalActivity';
 
-class FoodController {
+interface RequestPlus extends Request {
+  userId?: string;
+}
+
+class PhysicalActivityController {
   //Create user
-  async store(req, res) {
+  async store(req: RequestPlus, res: Response): Promise<Response> {
     //lidando um objeto, que tenha formato ...
     const schema = Yup.object().shape({
       name: Yup.string().required(),
-      grams: Yup.string().required(),
+      duration: Yup.string().required(),
       observation: Yup.string()
     });
 
@@ -17,11 +22,11 @@ class FoodController {
       return res.status(400).json({ error: 'Validation fails' });
     }
 
-    const { name, grams, observation } = req.body;
+    const { name, duration, observation } = req.body;
 
-    const food = await FoodModel.create({
+    const food = await PhysicalActivityModel.create({
       name,
-      grams,
+      duration,
       observation,
       user_id: req.userId
     });
@@ -29,11 +34,11 @@ class FoodController {
     return res.status(201).json(food);
   }
 
-  async update(req, res) {
+  async update(req: RequestPlus, res: Response): Promise<Response> {
     //lidando um objeto, que tenha formato ...
     const schema = Yup.object().shape({
       name: Yup.string().required(),
-      grams: Yup.string().required(),
+      duration: Yup.string().required(),
       observation: Yup.string()
     });
 
@@ -44,38 +49,40 @@ class FoodController {
 
     const { id } = req.params;
 
-    const { name, grams, observation } = req.body;
+    const { name, duration, observation } = req.body;
 
-    const food = await FoodModel.updateById(id, {
+    const food = await PhysicalActivityModel.updateById(id, {
       name,
-      grams,
+      duration,
       observation
     });
 
     return res.status(200).json(food);
   }
 
-  async index(req, res) {
-    const foods = await FoodModel.find({ user_id: req.userId });
+  async index(req: RequestPlus, res: Response): Promise<Response> {
+    const physicalActivities = await PhysicalActivityModel.find({
+      user_id: req.userId
+    });
 
-    return res.status(200).json(foods);
+    return res.status(200).json(physicalActivities);
   }
 
-  async show(req, res) {
+  async show(req: RequestPlus, res: Response): Promise<Response> {
     const { id } = req.params;
 
-    const food = await FoodModel.findById(id);
+    const physicalActivity = await PhysicalActivityModel.findById(id);
 
-    return res.status(200).json(food);
+    return res.status(200).json(physicalActivity);
   }
 
-  async delete(req, res) {
+  async delete(req: RequestPlus, res: Response): Promise<Response> {
     const { id } = req.params;
 
-    await FoodModel.deleteById(id);
+    await PhysicalActivityModel.deleteById(id);
 
     return res.status(200).json({ deleted: true });
   }
 }
 
-export default new FoodController();
+export default new PhysicalActivityController();

@@ -1,9 +1,18 @@
 import jwt from 'jsonwebtoken';
 import { promisify } from 'util';
+import { Request, Response } from 'express';
 
 import authConfig from '../../config/auth';
 
-export default async (req, res, next) => {
+interface RequestPlus extends Request {
+  userId?: string;
+}
+
+export default async (
+  req: RequestPlus,
+  res: Response,
+  next: Function
+): Promise<Response> => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader) {

@@ -8,18 +8,20 @@ var _routes = require('./routes'); var _routes2 = _interopRequireDefault(_routes
 require('./database'); //vai pegar o index.js automaticamente
 
 class App {
-  constructor() {
+  
+
+   constructor() {
     this.server = _express2.default.call(void 0, );
 
     this.middlewares();
     this.routes();
   }
 
-  middlewares() {
+   middlewares() {
     this.server.use(_express2.default.json());
   }
 
-  routes() {
+   routes() {
     this.server.use(_cors2.default.call(void 0, ));
     this.server.use(_routes2.default);
   }

@@ -4,17 +4,17 @@ import { MongoClient } from 'mongodb';
 import UserModel from '../app/models/User';
 import MedicineModel from '../app/models/Medicine';
 import FoodModel from '../app/models/Food';
-import PhysicalActivityModel from '../app/models/Food';
+import PhysicalActivityModel from '../app/models/PhysicalActivity';
 
 const models = [UserModel, MedicineModel, FoodModel, PhysicalActivityModel];
 
 class Database {
-  constructor() {
+  public constructor() {
     this.mongo();
     this.initModels();
   }
 
-  mongo() {
+  public mongo(): void {
     MongoClient.connect(process.env.MONGO_URL, function (err, db) {
       if (err) throw err;
       console.log('Database created!');
@@ -22,7 +22,7 @@ class Database {
     });
   }
 
-  initModels() {
+  public initModels(): void {
     models.forEach((model) => {
       model.init();
     });

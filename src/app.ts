@@ -8,18 +8,20 @@ import routes from './routes';
 import './database'; //vai pegar o index.js automaticamente
 
 class App {
-  constructor() {
+  public server: express.Application;
+
+  public constructor() {
     this.server = express();
 
     this.middlewares();
     this.routes();
   }
 
-  middlewares() {
+  public middlewares(): void {
     this.server.use(express.json());
   }
 
-  routes() {
+  public routes(): void {
     this.server.use(cors());
     this.server.use(routes);
   }
