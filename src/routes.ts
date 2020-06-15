@@ -5,6 +5,8 @@ import SessionController from './app/controllers/SessionController';
 import MedicineController from './app/controllers/MedicineController';
 import FoodController from './app/controllers/FoodController';
 import PhysicalActivityController from './app/controllers/PhysicalActivityController';
+import DayWeekController from './app/controllers/DayWeekController';
+import MedicineRoutineController from './app/controllers/MedicineRoutineController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -36,11 +38,18 @@ routes.get('/foods/:id', FoodController.show);
 routes.put('/foods/:id', FoodController.update);
 routes.delete('/foods/:id', FoodController.delete);
 
-/** physicalActivity */
+/** PhysicalActivity */
 routes.post('/physicalActivities', PhysicalActivityController.store);
 routes.get('/physicalActivities', PhysicalActivityController.index);
 routes.get('/physicalActivities/:id', PhysicalActivityController.show);
 routes.put('/physicalActivities/:id', PhysicalActivityController.update);
 routes.delete('/physicalActivities/:id', PhysicalActivityController.delete);
+
+/** Days of the Week */
+routes.get('/daysWeek', DayWeekController.index);
+
+/** MedicineRoutine */
+routes.post('/medicineRoutines', MedicineRoutineController.store);
+routes.get('/medicineRoutines', MedicineRoutineController.index);
 
 export default routes;

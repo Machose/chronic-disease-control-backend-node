@@ -57,6 +57,42 @@ abstract class AbstractModel {
     }
   }
 
+  public static async createList(listObject) {
+    const collectionName = this.collectionName;
+
+    const client = await MongoClient.connect(process.env.MONGO_URL, {
+      useNewUrlParser: true
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    if (!client) {
+      return;
+    }
+
+    try {
+      const dataBase = client.db(process.env.DATABASE);
+
+      const myPromise = () => {
+        return new Promise((resolve, reject) => {
+          dataBase
+            .collection(collectionName)
+            .insertMany(listObject, function (err, res) {
+              err ? reject(err) : resolve(res);
+            });
+        });
+      };
+
+      const result: Result = await myPromise();
+
+      client.close();
+
+      return result.ops[0];
+    } catch (err) {
+      return err;
+    }
+  }
+
   public static async find(query = {}) {
     const collectionName = this.collectionName;
 

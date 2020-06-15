@@ -5,6 +5,8 @@ var _SessionController = require('./app/controllers/SessionController'); var _Se
 var _MedicineController = require('./app/controllers/MedicineController'); var _MedicineController2 = _interopRequireDefault(_MedicineController);
 var _FoodController = require('./app/controllers/FoodController'); var _FoodController2 = _interopRequireDefault(_FoodController);
 var _PhysicalActivityController = require('./app/controllers/PhysicalActivityController'); var _PhysicalActivityController2 = _interopRequireDefault(_PhysicalActivityController);
+var _DayWeekController = require('./app/controllers/DayWeekController'); var _DayWeekController2 = _interopRequireDefault(_DayWeekController);
+var _MedicineRoutineController = require('./app/controllers/MedicineRoutineController'); var _MedicineRoutineController2 = _interopRequireDefault(_MedicineRoutineController);
 
 var _auth = require('./app/middlewares/auth'); var _auth2 = _interopRequireDefault(_auth);
 
@@ -36,11 +38,18 @@ routes.get('/foods/:id', _FoodController2.default.show);
 routes.put('/foods/:id', _FoodController2.default.update);
 routes.delete('/foods/:id', _FoodController2.default.delete);
 
-/** physicalActivity */
+/** PhysicalActivity */
 routes.post('/physicalActivities', _PhysicalActivityController2.default.store);
 routes.get('/physicalActivities', _PhysicalActivityController2.default.index);
 routes.get('/physicalActivities/:id', _PhysicalActivityController2.default.show);
 routes.put('/physicalActivities/:id', _PhysicalActivityController2.default.update);
 routes.delete('/physicalActivities/:id', _PhysicalActivityController2.default.delete);
+
+/** Days of the Week */
+routes.get('/daysWeek', _DayWeekController2.default.index);
+
+/** MedicineRoutine */
+routes.post('/medicineRoutines', _MedicineRoutineController2.default.store);
+routes.get('/medicineRoutines', _MedicineRoutineController2.default.index);
 
 exports. default = routes;

@@ -7,7 +7,7 @@ var _AbstractModel = require('../../core/AbstractModel'); var _AbstractModel2 = 
 
 
 class UserModel extends _AbstractModel2.default {
-   static __initStatic() {this.collectionName = 'users'}
+   static __initStatic() {this.collectionName = 'user'}
 
   static async create(user) {
     const client = await _mongodb.MongoClient.connect(process.env.MONGO_URL, {
@@ -27,7 +27,7 @@ class UserModel extends _AbstractModel2.default {
 
       const myPromise = () => {
         return new Promise((resolve, reject) => {
-          dataBase.collection('users').insertOne(user, function (err, res) {
+          dataBase.collection('user').insertOne(user, function (err, res) {
             err ? reject(err) : resolve(res);
           });
         });
@@ -62,7 +62,7 @@ class UserModel extends _AbstractModel2.default {
       const myPromise = () => {
         return new Promise((resolve, reject) => {
           dataBase
-            .collection('users')
+            .collection('user')
             .updateOne({ _id: new (0, _mongodb.ObjectID)(id) }, { $set: user }, function (
               err,
               res

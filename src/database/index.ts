@@ -5,8 +5,15 @@ import UserModel from '../app/models/User';
 import MedicineModel from '../app/models/Medicine';
 import FoodModel from '../app/models/Food';
 import PhysicalActivityModel from '../app/models/PhysicalActivity';
+import DayWeek from '../app/models/DayWeek';
 
-const models = [UserModel, MedicineModel, FoodModel, PhysicalActivityModel];
+const models = [
+  UserModel,
+  MedicineModel,
+  FoodModel,
+  PhysicalActivityModel,
+  DayWeek
+];
 
 class Database {
   public constructor() {
