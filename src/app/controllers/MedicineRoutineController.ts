@@ -55,6 +55,14 @@ class MedicineRoutineController {
 
     return res.status(200).json(medicineRoutines);
   }
+
+  async delete(req: RequestPlus, res: Response): Promise<Response> {
+    const { id } = req.params;
+
+    await MedicineRoutine.deleteById(id);
+
+    return res.status(200).json({ deleted: true });
+  }
 }
 
 export default new MedicineRoutineController();

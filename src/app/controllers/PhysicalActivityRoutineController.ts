@@ -55,6 +55,14 @@ class PhysicalActivityRoutineController {
 
     return res.status(200).json(physicalActivityRoutines);
   }
+
+  async delete(req: RequestPlus, res: Response): Promise<Response> {
+    const { id } = req.params;
+
+    await PhysicalActivityRoutineModel.deleteById(id);
+
+    return res.status(200).json({ deleted: true });
+  }
 }
 
 export default new PhysicalActivityRoutineController();

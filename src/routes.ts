@@ -53,10 +53,12 @@ routes.get('/daysWeek', DayWeekController.index);
 /** MedicineRoutine */
 routes.post('/medicineRoutines', MedicineRoutineController.store);
 routes.get('/medicineRoutines', MedicineRoutineController.index);
+routes.delete('/medicineRoutines/:id', MedicineRoutineController.delete);
 
 /** FoodRoutine */
 routes.post('/foodRoutines', FoodRoutineController.store);
 routes.get('/foodRoutines', FoodRoutineController.index);
+routes.delete('/foodRoutines/:id', FoodRoutineController.delete);
 
 /** PhysicalActivityRoutine */
 routes.post(
@@ -66,6 +68,10 @@ routes.post(
 routes.get(
   '/physicalActivitiesRoutines',
   PhysicalActivityRoutineController.index
+);
+routes.delete(
+  '/physicalActivitiesRoutines/:id',
+  PhysicalActivityRoutineController.delete
 );
 
 export default routes;
