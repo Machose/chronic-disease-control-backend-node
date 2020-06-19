@@ -1,17 +1,17 @@
 import { MongoClient } from 'mongodb';
 import AbstractModel from '../../core/AbstractModel';
 
-interface MedicineRoutine {
-  medicine_id: string;
+interface PhysicalActivityRoutine {
+  physical_activity_id: string;
   day_week_id: string;
   schedule: string;
   user_id: string;
   day_week: any[];
-  medicines: any[];
+  physical_activitys: any[];
 }
 
-export default class MedicineRoutineModel extends AbstractModel {
-  protected static collectionName: string = 'medicine_routine';
+export default class PhysicalActivityRoutineModel extends AbstractModel {
+  protected static collectionName: string = 'physical_activity_routine';
 
   public static async find(query = {}) {
     const collectionName = this.collectionName;
@@ -29,7 +29,7 @@ export default class MedicineRoutineModel extends AbstractModel {
     try {
       const dataBase = client.db(process.env.DATABASE);
 
-      const myPromise = (): Promise<MedicineRoutine[]> => {
+      const myPromise = (): Promise<PhysicalActivityRoutine[]> => {
         return new Promise((resolve, reject) => {
           dataBase
             .collection(collectionName)
@@ -37,17 +37,19 @@ export default class MedicineRoutineModel extends AbstractModel {
               { $match: query },
               {
                 $project: {
-                  medicine_id: { $toObjectId: '$medicine_id' },
+                  physical_activity_id: {
+                    $toObjectId: '$physical_activity_id'
+                  },
                   days_week: 1,
                   schedule: 1
                 }
               },
               {
                 $lookup: {
-                  from: 'medicine',
-                  localField: 'medicine_id',
+                  from: 'physical_activity',
+                  localField: 'physical_activity_id',
                   foreignField: '_id',
-                  as: 'medicine'
+                  as: 'physical_activity'
                 }
               }
             ])
@@ -58,7 +60,7 @@ export default class MedicineRoutineModel extends AbstractModel {
         });
       };
 
-      const result: MedicineRoutine[] = await myPromise();
+      const result: PhysicalActivityRoutine[] = await myPromise();
 
       client.close();
 

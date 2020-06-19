@@ -7,6 +7,8 @@ import FoodController from './app/controllers/FoodController';
 import PhysicalActivityController from './app/controllers/PhysicalActivityController';
 import DayWeekController from './app/controllers/DayWeekController';
 import MedicineRoutineController from './app/controllers/MedicineRoutineController';
+import PhysicalActivityRoutineController from './app/controllers/PhysicalActivityRoutineController';
+import FoodRoutineController from './app/controllers/FoodRoutineController';
 
 import authMiddleware from './app/middlewares/auth';
 
@@ -51,5 +53,19 @@ routes.get('/daysWeek', DayWeekController.index);
 /** MedicineRoutine */
 routes.post('/medicineRoutines', MedicineRoutineController.store);
 routes.get('/medicineRoutines', MedicineRoutineController.index);
+
+/** FoodRoutine */
+routes.post('/foodRoutines', FoodRoutineController.store);
+routes.get('/foodRoutines', FoodRoutineController.index);
+
+/** PhysicalActivityRoutine */
+routes.post(
+  '/physicalActivitiesRoutines',
+  PhysicalActivityRoutineController.store
+);
+routes.get(
+  '/physicalActivitiesRoutines',
+  PhysicalActivityRoutineController.index
+);
 
 export default routes;

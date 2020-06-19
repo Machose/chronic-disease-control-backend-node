@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
 
-import DayWeek from '../models/DayWeek';
+import DayWeekModel from '../models/DayWeek';
 
 class DayWeekController {
   async index(req: Request, res: Response): Promise<Response> {
-    const daysWeek = await DayWeek.find();
+    const daysWeek = await DayWeekModel.find();
 
     return res.status(200).json(daysWeek);
   }

@@ -2,7 +2,7 @@ import { MongoClient } from 'mongodb';
 
 import AbstractModel from '../../core/AbstractModel';
 
-export default class DayWeek extends AbstractModel {
+export default class DayWeekModel extends AbstractModel {
   protected static collectionName: string = 'day_week';
 
   public static async init() {

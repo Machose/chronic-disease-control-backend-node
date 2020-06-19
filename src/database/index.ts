@@ -5,14 +5,20 @@ import UserModel from '../app/models/User';
 import MedicineModel from '../app/models/Medicine';
 import FoodModel from '../app/models/Food';
 import PhysicalActivityModel from '../app/models/PhysicalActivity';
-import DayWeek from '../app/models/DayWeek';
+import DayWeekModel from '../app/models/DayWeek';
+import MedicineRoutineModel from '../app/models/MedicineRoutine';
+import FoodRoutineModel from '../app/models/FoodRoutine';
+import PhysicalActivityRoutineModel from '../app/models/PhysicalActivityRoutine';
 
 const models = [
   UserModel,
   MedicineModel,
   FoodModel,
   PhysicalActivityModel,
-  DayWeek
+  DayWeekModel,
+  MedicineRoutineModel,
+  FoodRoutineModel,
+  PhysicalActivityRoutineModel
 ];
 
 class Database {
